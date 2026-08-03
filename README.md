@@ -74,8 +74,16 @@ die ausgewählte Station über ihre API bereitstellt.
 Dieses Projekt ist derzeit ein **benutzerdefiniertes HACS-Repository** und noch
 nicht Bestandteil des offiziellen HACS-Standardkatalogs.
 
-1. HACS in Home Assistant öffnen.
-2. Zu **Integrationen** wechseln.
+Über den folgenden Button kann das Repository direkt in HACS geöffnet und als
+benutzerdefiniertes Repository hinzugefügt werden:
+
+[![HyDAS API direkt in HACS öffnen](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=tcbrmr&repository=ha-hydas)
+
+*Oder manuell:*
+
+1. [HACS installieren](https://www.hacs.xyz/docs/use/download/download/), falls
+   es noch nicht eingerichtet ist.
+2. HACS in Home Assistant öffnen und zu **Integrationen** wechseln.
 3. Oben rechts das Drei-Punkte-Menü öffnen und
    **Benutzerdefinierte Repositories** auswählen.
 4. Als Repository diese URL eintragen:
@@ -94,27 +102,27 @@ Bei Aktualisierungen bleiben bestehende Konfigurationseinträge und Entity-IDs
 erhalten. Neu hinzugekommene Sensorarten werden nach dem Neuladen der
 Integration automatisch ergänzt.
 
-### Ein neuer Release wird in HACS noch nicht angezeigt
 
-HACS aktualisiert die Metadaten benutzerdefinierter Repositories nicht in
-Echtzeit. Um einen gerade veröffentlichten Release sofort abzurufen:
+## Manuelle Installation
 
-1. In HACS **HyDAS API** öffnen.
-2. Das Drei-Punkte-Menü des Repository-Eintrags öffnen.
-3. **Informationen aktualisieren** auswählen.
-4. Den Repository-Eintrag erneut öffnen und **Erneut herunterladen** wählen.
-5. Im Download-Dialog die neueste Version auswählen und anschließend Home
-   Assistant neu starten.
+1. Das Archiv des [neuesten Releases](https://github.com/tcbrmr/ha-hydas/releases/latest)
+   herunterladen und entpacken.
+2. Den enthaltenen Ordner `custom_components/hydas` in das
+   Home-Assistant-Konfigurationsverzeichnis kopieren. Das Ergebnis muss so
+   aussehen:
 
-Alternativ liest HACS die Daten eines benutzerdefinierten Repositorys beim
-nächsten Home-Assistant-Start erneut über die GitHub-API ein. Ein Klick auf
-**Nach Updates suchen** in Home Assistant aktualisiert nicht zwingend sofort die
-zwischengespeicherten HACS-Repository-Metadaten.
+   ```text
+   <config>/custom_components/hydas/manifest.json
+   ```
 
-### Manuelle Installation
+3. Home Assistant neu starten.
+4. Unter **Einstellungen → Geräte & Dienste → Integration hinzufügen** nach
+   **HyDAS API** suchen und die Integration einrichten.
 
-Den Ordner `custom_components/hydas` nach
-`<config>/custom_components/hydas` kopieren und Home Assistant neu starten.
+Für diese Integration muss keine Dashboard-Ressource und kein JavaScript-Modul
+registriert werden. Bei einer manuellen Aktualisierung wird der vorhandene
+Ordner `custom_components/hydas` durch den Ordner aus dem neuen Release ersetzt
+und Home Assistant anschließend neu gestartet.
 
 ## Einrichtung
 
