@@ -10,7 +10,7 @@
           "scan_interval": "Aktualisierungsintervall (Sekunden)"
         },
         "data_description": {
-          "base_url": "Zum Beispiel https://pegelonline.wsv.de/api/v1",
+          "base_url": "Basisadresse der API ohne /stations am Ende",
           "scan_interval": "Mindestens 60 Sekunden"
         }
       },

@@ -6,7 +6,7 @@
         "title": "HyDAS API verbinden",
         "description": "Gib die Basis-URL einer API ein, die den HydroDaten-API-Standard implementiert. Im nächsten Schritt kannst du die angebotenen Stationen durchsuchen und auswählen.",
         "data": {"base_url": "Basis-URL", "scan_interval": "Aktualisierungsintervall (Sekunden)"},
-        "data_description": {"base_url": "Zum Beispiel https://pegelonline.wsv.de/api/v1", "scan_interval": "Mindestens 60 Sekunden"}
+        "data_description": {"base_url": "Basisadresse der API ohne /stations am Ende", "scan_interval": "Mindestens 60 Sekunden"}
       },
       "stations": {
         "title": "Stationen auswählen",

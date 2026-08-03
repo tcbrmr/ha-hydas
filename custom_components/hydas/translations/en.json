@@ -6,7 +6,7 @@
         "title": "Connect HyDAS API",
         "description": "Enter the base URL of an API implementing the Hydro Data API standard. You can search and select its stations in the next step.",
         "data": {"base_url": "Base URL", "scan_interval": "Update interval (seconds)"},
-        "data_description": {"base_url": "For example https://pegelonline.wsv.de/api/v1", "scan_interval": "At least 60 seconds"}
+        "data_description": {"base_url": "Base address of the API without /stations at the end", "scan_interval": "At least 60 seconds"}
       },
       "stations": {
         "title": "Select stations",
