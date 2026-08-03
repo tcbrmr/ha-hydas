@@ -1,110 +1,216 @@
-# HyDAS API für Home Assistant
+<p align="center">
+  <img src="custom_components/hydas/brand/icon.png" alt="HyDAS API" width="160">
+</p>
 
-Eine über HACS installierbare Custom Integration für APIs nach dem
-[HydroDaten-API-Standard](https://m.wasserstaende.de/webservice/hydas).
+<h1 align="center">HyDAS API für Home Assistant</h1>
 
-## Funktionen
+<p align="center">
+  Hydrologische Messdaten aus standardisierten HydroDaten-APIs direkt in
+  Home Assistant nutzen.
+</p>
 
-- Beliebig viele HyDAS-API-Instanzen als getrennte Integrations-Einträge
-- Automatische Erkennung von Messstellen und Parametern
-- Ein Sensor pro Messstellen-Parameter, inklusive Einheit und Messzeitpunkt
-- Dynamisches Hinzufügen neu auftauchender Parameter
-- Durchsuchbare Mehrfachauswahl der von der API angebotenen Stationen
-- Konfigurierbares Polling (mindestens 60 Sekunden)
-- Optionale Diagnose-Sensoren für APIs mit einem `/health`-Endpunkt
+<p align="center">
+  <a href="https://github.com/tcbrmr/ha-hydas/releases"><img src="https://img.shields.io/github/v/release/tcbrmr/ha-hydas?display_name=tag&sort=semver" alt="GitHub Release"></a>
+  <a href="https://github.com/tcbrmr/ha-hydas/blob/main/LICENSE"><img src="https://img.shields.io/github/license/tcbrmr/ha-hydas" alt="MIT License"></a>
+  <img src="https://img.shields.io/badge/HACS-Custom-41BDF5" alt="HACS Custom Repository">
+  <img src="https://img.shields.io/badge/Home%20Assistant-2024.6%2B-41BDF5" alt="Home Assistant 2024.6 oder neuer">
+</p>
 
-## Installation
+**HyDAS API** ist eine inoffizielle Home-Assistant-Custom-Integration für
+Schnittstellen nach dem deutschen
+[HydroDaten API Standard (HyDAS)](https://dev.hochwasserzentralen.de/hydrodaten-api/).
+Sie erkennt die angebotenen Messstationen und Messparameter automatisch und
+stellt die jeweils aktuellen Werte als Home-Assistant-Sensoren bereit.
 
-Das mitgelieferte Integrationsicon wird ab Home Assistant 2026.3 direkt aus
-`custom_components/hydas/brand` geladen. In älteren Versionen funktioniert die
-Integration weiterhin, dort kann jedoch das generische Integrationssymbol
-erscheinen.
+Damit lassen sich öffentliche hydrologische Daten in Dashboards,
+Benachrichtigungen und Automationen einbinden – vom privaten Pegelmonitoring bis
+zu **Smart-City**, **Open-Data**, **Hochwasservorsorge**, **Klimaanpassung** und
+kommunalem **Umweltmonitoring**.
 
-### HACS
+> [!IMPORTANT]
+> Diese Integration ist kein amtliches Warnsystem. Messwerte können ungeprüft,
+> verzögert oder zeitweise nicht verfügbar sein. Für sicherheitskritische
+> Entscheidungen sind ausschließlich die offiziellen Veröffentlichungen und
+> Warnkanäle der zuständigen Behörden maßgeblich.
 
-1. Dieses Repository in HACS als benutzerdefiniertes Repository vom Typ
-   **Integration** hinzufügen.
-2. **HyDAS API** installieren.
-3. Home Assistant neu starten.
+## Was kann die Integration?
 
-### Manuell
+- beliebig viele HyDAS-API-Instanzen parallel anbinden
+- Stationen nach Gewässer, Name, Bundesland oder Stationsnummer durchsuchen
+- eine oder mehrere Stationen je API auswählen
+- Messparameter und Einheiten automatisch erkennen
+- pro Stationsparameter einen Home-Assistant-Sensor erzeugen
+- neue Messparameter bei späteren Aktualisierungen dynamisch ergänzen
+- Aktualisierungsintervall ab 60 Sekunden konfigurieren
+- API-Verfügbarkeit über den optionalen `/health`-Endpunkt überwachen
+- Stations- und Parameterstatus als Diagnoseinformationen bereitstellen
+- typabhängige Gerätebezeichnungen und passende Messwertsymbole verwenden
+- deutsche und englische Benutzeroberfläche anzeigen
+
+Je nach Datenanbieter können unter anderem folgende Messgrößen verfügbar sein:
+
+- relativer und absoluter Wasserstand
+- Abfluss und Durchfluss
+- Grundwasserstand und Grundwassertemperatur
+- Wassertemperatur
+- Lufttemperatur
+- Windgeschwindigkeit
+
+Die tatsächlich erzeugten Sensoren richten sich immer nach den Parametern, die
+die ausgewählte Station über ihre API bereitstellt.
+
+## Mögliche Anwendungsfälle
+
+- Pegelstände und Abflüsse im Home-Assistant-Dashboard visualisieren
+- Benachrichtigungen bei selbst definierten Wasserstandsgrenzen auslösen
+- kommunale Smart-City-Dashboards um offene Umweltdaten ergänzen
+- Grundwasser- und Wetterdaten gemeinsam mit lokalen IoT-Sensoren auswerten
+- die technische Erreichbarkeit einer Daten-API überwachen
+- Stationsstörungen oder Wartungszustände in Automationen berücksichtigen
+- Daten verschiedener Länder- und Bundesanbieter in einer Oberfläche bündeln
+
+## Installation über HACS
+
+Dieses Projekt ist derzeit ein **benutzerdefiniertes HACS-Repository** und noch
+nicht Bestandteil des offiziellen HACS-Standardkatalogs.
+
+1. HACS in Home Assistant öffnen.
+2. Zu **Integrationen** wechseln.
+3. Oben rechts das Drei-Punkte-Menü öffnen und
+   **Benutzerdefinierte Repositories** auswählen.
+4. Als Repository diese URL eintragen:
+
+   ```text
+   https://github.com/tcbrmr/ha-hydas
+   ```
+
+5. Als Kategorie **Integration** auswählen und das Repository hinzufügen.
+6. Nach **HyDAS API** suchen und **Herunterladen** auswählen.
+7. Home Assistant neu starten.
+8. Unter **Einstellungen → Geräte & Dienste → Integration hinzufügen** nach
+   **HyDAS API** suchen.
+
+Bei Aktualisierungen bleiben bestehende Konfigurationseinträge und Entity-IDs
+erhalten. Neu hinzugekommene Sensorarten werden nach dem Neuladen der
+Integration automatisch ergänzt.
+
+### Manuelle Installation
 
 Den Ordner `custom_components/hydas` nach
 `<config>/custom_components/hydas` kopieren und Home Assistant neu starten.
 
 ## Einrichtung
 
-Unter **Einstellungen → Geräte & Dienste → Integration hinzufügen** nach
-**HyDAS API** suchen. Benötigt werden:
+Beim Hinzufügen der Integration werden benötigt:
 
-- die Basis-URL ohne abschließenden Endpoint, z. B.
-  `https://pegelonline.wsv.de/api/v1`,
-- das Aktualisierungsintervall in Sekunden.
+- die Basis-URL der HyDAS-API, ohne `/stations` am Ende
+- das gewünschte Aktualisierungsintervall in Sekunden
 
-Nach erfolgreicher Verbindungsprüfung zeigt Home Assistant eine durchsuchbare
-Mehrfachauswahl an. Die Einträge beginnen mit dem Gewässer und enthalten danach
-Stationsname, Bundesland und Stationsnummer, zum Beispiel
-`EMS - RHEINE UNTERSCHLEUSE (DE-NW · 3390020)`. Die Liste ist nach Gewässer und Station
-sortiert. Mindestens eine Station muss ausgewählt werden.
+Als öffentliches Beispiel kann PEGELONLINE verwendet werden:
 
-Die Gerätenamen richten sich nach dem Stationstyp des HydroDaten-Standards:
+```text
+https://pegelonline.wsv.de/api/v1
+```
 
-- Oberflächenwasser: `Gewässer - Messstellenname`, z. B. `EMS - LINGEN-DARME`
-- Grundwasser: `Grundwasserkörper - Messstellenname`, sofern der optionale
-  Grundwasserkörper vorhanden ist; andernfalls nur der Messstellenname
+Nach erfolgreicher Prüfung lädt die Integration `/stations`. Anschließend
+können die Stationen in einer durchsuchbaren Mehrfachauswahl gefiltert und
+ausgewählt werden. Weitere APIs lassen sich als zusätzliche Integrationseinträge
+einrichten. Die Stationsauswahl kann später über **Konfigurieren** geändert
+werden.
+
+## Geräte- und Sensorbenennung
+
+Die Gerätenamen richten sich nach dem Stationstyp des HyDAS-Standards:
+
+- Oberflächenwasser: `Gewässer - Messstellenname`, etwa `EMS - LINGEN-DARME`
+- Grundwasser: `Grundwasserkörper - Messstellenname`, sofern vorhanden
 - Meteorologie: Messstellenname
 
-Für API-Implementierungen wie PEGELONLINE, die das Feld `type` derzeit nicht
-liefern, wird eine Station mit `waterBodyName` als Oberflächenwasser behandelt.
+API-Implementierungen wie PEGELONLINE liefern derzeit nicht zwingend ein
+`type`-Feld. Ist stattdessen `waterBodyName` vorhanden, behandelt die
+Integration die Station als Oberflächenwasser.
 
-## Sensorsymbole
+Die Sensorbezeichnung wird aus dem vom Anbieter gelieferten Parameternamen
+gebildet. Beispiele:
 
-Die Integration ordnet standardisierten Messgrößen passende Symbole zu:
+```text
+EMS - LINGEN-DARME Wasserstand
+Rhein - Pegel Köln Wasserstand, relativ
+Rhein - Pegel Köln Abfluss
+```
 
-- Wasserstand: `mdi:waves`
-- Grundwasserstand: `mdi:water-well`
-- Abfluss und Durchfluss: `mdi:waves-arrow-right`
-- Wasser- und Grundwassertemperatur: `mdi:thermometer-water`
-- Lufttemperatur: `mdi:thermometer`
-- Windgeschwindigkeit: `mdi:weather-windy`
+## Diagnose
 
-Für PEGELONLINE werden außerdem die Kurzbezeichnungen `W` und `Q` erkannt.
+### API-Health
 
-## API-Diagnose
+Unterstützt eine API `GET /health`, legt die Integration ein eigenes
+API-Diagnosegerät mit folgenden Sensoren an:
 
-Wenn die angebundene API den standardisierten Endpunkt `GET /health` anbietet,
-legt die Integration ein eigenes API-Gerät mit drei Diagnose-Sensoren an:
-
-- Status (`healthy`, `degraded` oder `unhealthy`), inklusive `message`-Attribut
+- Status: `healthy`, `degraded` oder `unhealthy`
 - Uptime in Sekunden
 - Zeitpunkt des letzten Health-Checks
 
-Fehlt der Endpunkt (HTTP 404), werden diese Sensoren nicht angelegt. Fehler am
-optionalen Health-Endpunkt beeinträchtigen die normalen Messsensoren nicht.
+Die optionale Statusnachricht wird als Attribut des Statussensors geführt. Ein
+fehlender Health-Endpunkt (HTTP 404) beeinträchtigt die normalen Messsensoren
+nicht und erzeugt keine Health-Entitäten.
 
-## Stationsdiagnose
+### Stationsstatus
 
-Wenn eine Station einen standardisierten `status`-Block anbietet, werden drei
-Diagnose-Sensoren am Stationsgerät angelegt:
+Bietet eine Station einen `status`-Block an, werden folgende
+Diagnose-Sensoren angelegt:
 
-- **Stationsstatus** ist standardmäßig aktiviert. `message` und `contact`
-  werden als Attribute geführt.
-- **Status seit** ist ein standardmäßig deaktivierter Zeitstempelsensor.
-- **Voraussichtliches Statusende** ist ebenfalls standardmäßig deaktiviert.
+- **Stationsstatus** – standardmäßig aktiviert
+- **Status seit** – standardmäßig deaktiviert
+- **Voraussichtliches Statusende** – standardmäßig deaktiviert
 
-Die Zeitstempelsensoren lassen sich bei Bedarf in Home Assistant aktivieren.
-Der Parameterstatus bleibt zusätzlich als Attribut am jeweiligen Messsensor
-verfügbar, ohne weitere Statusentitäten pro Messreihe anzulegen.
+`message` und `contact` werden als Attribute des Stationsstatus geführt. Der
+Parameterstatus ist zusätzlich am jeweiligen Messsensor verfügbar.
 
-Für weitere APIs den Vorgang einfach wiederholen. Die Stationsauswahl kann
-später über **Konfigurieren** am jeweiligen Integrationseintrag geändert werden.
+## Unterstützte Schnittstelle
 
-## Unterstützte Endpunkte
+Für die Messwertintegration werden mindestens diese Endpunkte erwartet:
 
-Die API muss diese standardisierten JSON-Endpunkte anbieten:
+```text
+GET /stations
+GET /stations/{stationId}/parameters
+GET /stations/{stationId}/parameters/{parameterId}/values
+```
 
-- `GET /stations`
-- `GET /stations/{stationId}/parameters`
-- `GET /stations/{stationId}/parameters/{parameterId}/values`
+Die jeweiligen Nutzdaten müssen entsprechend der HyDAS-Basisstruktur im
+JSON-Feld `data` bereitgestellt werden. Der optionale Endpunkt `GET /health`
+entspricht der erweiterten Variante des Standards.
 
-Die Nutzlast wird jeweils im Feld `data` erwartet.
+## Über den HydroDaten API Standard
+
+Der HydroDaten API Standard ist eine deutschlandweit abgestimmte Spezifikation
+für einheitliche REST-Schnittstellen zu hydrologischen Daten. Er entstand 2025
+im Rahmen des unabhängigen Projekts **HydroDaten API** auf Initiative der
+deutschen Bundesländer. An der Projektgruppe sind Vertretungen verschiedener
+Länder- und Bundesbehörden sowie des Online-Dienstes PEGELONLINE beteiligt.
+
+Der Standard soll den öffentlichen Zugang zu hydrologischen Daten vereinfachen
+und eine interoperable Grundlage für Fachanwendungen sowie den Datenaustausch
+zwischen Bund, Ländern und Dritten schaffen.
+
+Weiterführende offizielle Informationen:
+
+- [Projektseite des HydroDaten API Standards](https://dev.hochwasserzentralen.de/hydrodaten-api/)
+- [Einführung und Ressourcenmodell](https://dev.hochwasserzentralen.de/hydrodaten-api/intro)
+- [Interaktive Dokumentation](https://dev.hochwasserzentralen.de/hydrodaten-api/docs-extended-stable-elements)
+- [Übersicht aktiver API-Implementierungen](https://dev.hochwasserzentralen.de/hydrodaten-api/reals)
+- [PEGELONLINE](https://www.pegelonline.wsv.de/)
+
+## Haftung und Projektstatus
+
+Dieses Repository ist ein unabhängiges Community-Projekt. Es wird weder vom
+Projekt HydroDaten API noch von den beteiligten Behörden oder PEGELONLINE
+entwickelt, betrieben oder offiziell unterstützt.
+
+Fehler und Funktionswünsche können über die
+[GitHub Issues](https://github.com/tcbrmr/ha-hydas/issues) gemeldet werden.
+
+## Lizenz
+
+Der Quellcode dieser Integration steht unter der [MIT-Lizenz](LICENSE). Für die
+über angebundene APIs abgerufenen Daten gelten die Lizenz- und
+Nutzungsbedingungen des jeweiligen Datenanbieters.
