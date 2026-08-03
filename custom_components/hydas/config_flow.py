@@ -64,9 +64,7 @@ def _stations_schema(
             ),
         )
     ]
-    key = vol.Required(CONF_STATION_IDS)
-    if selected:
-        key = vol.Required(CONF_STATION_IDS, default=selected)
+    key = vol.Required(CONF_STATION_IDS, default=selected or [])
     return vol.Schema({key: SelectSelector(SelectSelectorConfig(options=options, multiple=True))})
 
 
