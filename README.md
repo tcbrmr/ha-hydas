@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/tcbrmr/ha-hydas/releases/latest"><img src="https://img.shields.io/github/v/release/tcbrmr/ha-hydas?display_name=tag&sort=semver&cacheSeconds=300&v=0.1.5" alt="GitHub Release"></a>
+  <a href="https://github.com/tcbrmr/ha-hydas/releases/latest"><img src="https://img.shields.io/github/v/release/tcbrmr/ha-hydas?display_name=tag&sort=semver&cacheSeconds=300&v=0.1.6" alt="GitHub Release"></a>
   <a href="https://github.com/tcbrmr/ha-hydas/blob/main/LICENSE"><img src="https://img.shields.io/github/license/tcbrmr/ha-hydas" alt="MIT License"></a>
   <img src="https://img.shields.io/badge/HACS-Custom-41BDF5" alt="HACS Custom Repository">
   <img src="https://img.shields.io/badge/Home%20Assistant-2024.6%2B-41BDF5" alt="Home Assistant 2024.6 oder neuer">
