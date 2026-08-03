@@ -2,6 +2,7 @@
 
 from unittest.mock import AsyncMock, patch
 
+import pytest
 from homeassistant import config_entries, data_entry_flow
 
 from custom_components.hydas.const import (
@@ -73,9 +74,9 @@ async def test_config_flow_requires_known_station(hass):
         result = await hass.config_entries.flow.async_configure(
             result["flow_id"], user_input=CONNECTION
         )
-        result = await hass.config_entries.flow.async_configure(
-            result["flow_id"], user_input={CONF_STATION_IDS: ["unknown"]}
-        )
+        with pytest.raises(data_entry_flow.InvalidData) as exc_info:
+            await hass.config_entries.flow.async_configure(
+                result["flow_id"], user_input={CONF_STATION_IDS: ["unknown"]}
+            )
 
-    assert result["type"] is data_entry_flow.FlowResultType.FORM
-    assert result["errors"] == {CONF_STATION_IDS: "invalid_station"}
+    assert exc_info.value.path == [CONF_STATION_IDS]
