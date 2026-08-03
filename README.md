@@ -46,6 +46,8 @@ kommunalem **Umweltmonitoring**.
 - Aktualisierungsintervall ab 60 Sekunden konfigurieren
 - API-Verfügbarkeit über den optionalen `/health`-Endpunkt überwachen
 - Stations- und Parameterstatus als Diagnoseinformationen bereitstellen
+- amtliche Hochwasserwarnungen des Länderübergreifenden Hochwasserportals
+  (LHP) räumlich den ausgewählten Messstellen zuordnen
 - typabhängige Gerätebezeichnungen und passende Messwertsymbole verwenden
 - deutsche und englische Benutzeroberfläche anzeigen
 
@@ -59,7 +61,11 @@ Je nach Datenanbieter können unter anderem folgende Messgrößen verfügbar sei
 - Windgeschwindigkeit
 
 Die tatsächlich erzeugten Sensoren richten sich immer nach den Parametern, die
-die ausgewählte Station über ihre API bereitstellt.
+die ausgewählte Station über ihre API bereitstellt. Ein Warnsensor wird erzeugt,
+sobald die Koordinate einer Messstelle innerhalb eines amtlichen Warngebiets
+liegt. Flussabschnitte werden nur bei passendem Gewässernamen und geringem
+Abstand zur Warnlinie zugeordnet. Quelle und Datenstand werden gemäß CC BY 4.0
+als Sensorattribute ausgewiesen.
 
 ## Mögliche Anwendungsfälle
 

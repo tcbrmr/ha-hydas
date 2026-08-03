@@ -16,6 +16,7 @@ from .const import (
     DOMAIN,
 )
 from .coordinator import HyDASCoordinator
+from .flood import LHPClient
 
 PLATFORMS = [Platform.SENSOR]
 
@@ -23,10 +24,12 @@ PLATFORMS = [Platform.SENSOR]
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up HyDAS from a config entry."""
     config = {**entry.data, **entry.options}
-    client = HyDASClient(async_get_clientsession(hass), config[CONF_BASE_URL])
+    session = async_get_clientsession(hass)
+    client = HyDASClient(session, config[CONF_BASE_URL])
     coordinator = HyDASCoordinator(
         hass,
         client,
+        LHPClient(session),
         config.get(CONF_STATION_IDS, []),
         config.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
     )

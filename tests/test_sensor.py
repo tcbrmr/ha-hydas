@@ -7,8 +7,10 @@ import pytest
 
 from custom_components.hydas.api import Measurement
 from custom_components.hydas.const import DOMAIN
+from custom_components.hydas.flood import FloodAlert, FloodAlertData
 from custom_components.hydas.sensor import (
     HyDASAbsoluteWaterLevelSensor,
+    HyDASFloodWarningSensor,
     HyDASReferenceElevationSensor,
     _absolute_water_level,
     _is_relative_water_level,
@@ -28,6 +30,8 @@ def _measurement(
     return Measurement(
         station={
             "id": "lingen",
+            "waterBodyName": "Ems",
+            "coordinates": {"lat": 52.496589, "lon": 7.288342},
             "referenceElevation": {
                 "value": reference_value,
                 "unit": "m",
@@ -84,6 +88,37 @@ async def test_setup_adds_raw_reference_and_absolute_water_level_sensors():
     coordinator = MagicMock()
     coordinator.data = {measurement.key: measurement}
     coordinator.health_supported = False
+    coordinator.flood_alerts = {
+        "lingen": (
+            FloodAlert(
+                "NI_ems",
+                "Polygon",
+                [[[7.2, 52.4], [7.4, 52.4], [7.4, 52.6], [7.2, 52.6], [7.2, 52.4]]],
+                "Ems bei Lingen",
+                "Region",
+                "Hochwasserwarnung",
+                "https://example.test/warning",
+                4,
+                "Hochwasser",
+                "LHP.NI.ems",
+                "NLWKN",
+                None,
+                None,
+                None,
+                "Moderate",
+                "Observed",
+                "Hochwasser an der Ems",
+                "Meiden Sie das Gewässer.",
+            ),
+        )
+    }
+    coordinator.flood_alert_data = FloodAlertData(
+        "2026-08-03T19:13:47+01:00",
+        "https://www.hochwasserzentralen.de",
+        "CC BY 4.0",
+        coordinator.flood_alerts["lingen"],
+    )
+    coordinator.flood_available = True
     entry = MagicMock()
     entry.entry_id = "entry"
     hass = SimpleNamespace(data={DOMAIN: {entry.entry_id: coordinator}})
@@ -97,8 +132,13 @@ async def test_setup_adds_raw_reference_and_absolute_water_level_sensors():
     absolute_sensor = next(
         entity for entity in added if isinstance(entity, HyDASAbsoluteWaterLevelSensor)
     )
-    assert len(added) == 3
+    flood_sensor = next(entity for entity in added if isinstance(entity, HyDASFloodWarningSensor))
+    assert len(added) == 4
     assert reference_sensor.native_value == pytest.approx(14.980)
     assert reference_sensor.native_unit_of_measurement == "m. ü. NN"
     assert absolute_sensor.native_value == pytest.approx(16.140)
     assert absolute_sensor.native_unit_of_measurement == "m. ü. NN"
+    assert flood_sensor.native_value == "flood_warning"
+    assert flood_sensor.extra_state_attributes["source_url"] == (
+        "https://www.hochwasserzentralen.de"
+    )
