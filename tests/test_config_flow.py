@@ -5,6 +5,7 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from homeassistant import config_entries, data_entry_flow
 
+from custom_components.hydas.config_flow import _stations_schema
 from custom_components.hydas.const import (
     CONF_BASE_URL,
     CONF_SCAN_INTERVAL,
@@ -20,6 +21,18 @@ STATIONS = [
     {"id": "b", "name": "Beta", "waterBodyName": "Rhine"},
     {"id": "a", "name": "Alpha", "waterBodyName": "Elbe"},
 ]
+
+
+def test_station_schema_has_no_default_selection():
+    schema = _stations_schema(STATIONS)
+
+    assert schema({})[CONF_STATION_IDS] == []
+
+
+def test_station_schema_preserves_existing_selection():
+    schema = _stations_schema(STATIONS, ["a"])
+
+    assert schema({})[CONF_STATION_IDS] == ["a"]
 
 
 async def test_config_flow_creates_entry(hass):
