@@ -49,9 +49,7 @@ async def async_setup_entry(
                 (
                     HyDASStationStatusSensor(coordinator, entry, station_id),
                     HyDASStationStatusSinceSensor(coordinator, entry, station_id),
-                    HyDASStationStatusExpectedEndSensor(
-                        coordinator, entry, station_id
-                    ),
+                    HyDASStationStatusExpectedEndSensor(coordinator, entry, station_id),
                 )
             )
         if coordinator.health_supported and not health_added:
@@ -93,7 +91,9 @@ class HyDASSensor(CoordinatorEntity[HyDASCoordinator], SensorEntity):
     @property
     def name(self) -> str:
         measurement = self.measurement
-        return str(measurement.parameter.get("name") or self._key[1]) if measurement else self._key[1]
+        return (
+            str(measurement.parameter.get("name") or self._key[1]) if measurement else self._key[1]
+        )
 
     @property
     def native_value(self) -> float | int | None:
@@ -141,9 +141,7 @@ class HyDASSensor(CoordinatorEntity[HyDASCoordinator], SensorEntity):
         }
         if measurement.timestamp:
             try:
-                attributes["measurement_timestamp"] = datetime.fromisoformat(
-                    measurement.timestamp
-                )
+                attributes["measurement_timestamp"] = datetime.fromisoformat(measurement.timestamp)
             except ValueError:
                 attributes["measurement_timestamp"] = measurement.timestamp
         return {key: value for key, value in attributes.items() if value is not None}
@@ -233,17 +231,13 @@ class HyDASHealthTimestampSensor(HyDASHealthSensorBase):
         return datetime.fromisoformat(health.timestamp) if health else None
 
 
-class HyDASStationStatusSensorBase(
-    CoordinatorEntity[HyDASCoordinator], SensorEntity
-):
+class HyDASStationStatusSensorBase(CoordinatorEntity[HyDASCoordinator], SensorEntity):
     """Base class for station-level operational status sensors."""
 
     _attr_has_entity_name = True
     _attr_entity_category = EntityCategory.DIAGNOSTIC
 
-    def __init__(
-        self, coordinator: HyDASCoordinator, entry: ConfigEntry, station_id: str
-    ) -> None:
+    def __init__(self, coordinator: HyDASCoordinator, entry: ConfigEntry, station_id: str) -> None:
         super().__init__(coordinator)
         self._entry = entry
         self._station_id = station_id
@@ -287,15 +281,24 @@ class HyDASStationStatusSensor(HyDASStationStatusSensorBase):
     _attr_translation_key = "station_status"
     _attr_device_class = SensorDeviceClass.ENUM
     _attr_options = [
-        "operational", "impaired", "decommissioned", "unavailable",
-        "degraded", "sensor-malfunction", "communication-failure",
-        "power-outage", "maintenance", "construction", "calibration",
-        "data-quality", "environmental", "offline", "other",
+        "operational",
+        "impaired",
+        "decommissioned",
+        "unavailable",
+        "degraded",
+        "sensor-malfunction",
+        "communication-failure",
+        "power-outage",
+        "maintenance",
+        "construction",
+        "calibration",
+        "data-quality",
+        "environmental",
+        "offline",
+        "other",
     ]
 
-    def __init__(
-        self, coordinator: HyDASCoordinator, entry: ConfigEntry, station_id: str
-    ) -> None:
+    def __init__(self, coordinator: HyDASCoordinator, entry: ConfigEntry, station_id: str) -> None:
         super().__init__(coordinator, entry, station_id)
         self._attr_unique_id = f"{entry.entry_id}_{station_id}_station_status"
 
@@ -307,7 +310,11 @@ class HyDASStationStatusSensor(HyDASStationStatusSensorBase):
 
     @property
     def icon(self) -> str:
-        return "mdi:check-circle-outline" if self.native_value == "operational" else "mdi:alert-circle-outline"
+        return (
+            "mdi:check-circle-outline"
+            if self.native_value == "operational"
+            else "mdi:alert-circle-outline"
+        )
 
     @property
     def extra_state_attributes(self) -> dict[str, str]:
@@ -347,9 +354,7 @@ class HyDASStationStatusSinceSensor(HyDASStationStatusTimestampSensor):
     _attr_icon = "mdi:clock-start"
     status_key = "since"
 
-    def __init__(
-        self, coordinator: HyDASCoordinator, entry: ConfigEntry, station_id: str
-    ) -> None:
+    def __init__(self, coordinator: HyDASCoordinator, entry: ConfigEntry, station_id: str) -> None:
         super().__init__(coordinator, entry, station_id)
         self._attr_unique_id = f"{entry.entry_id}_{station_id}_station_status_since"
 
@@ -361,8 +366,6 @@ class HyDASStationStatusExpectedEndSensor(HyDASStationStatusTimestampSensor):
     _attr_icon = "mdi:clock-end"
     status_key = "expectedEnd"
 
-    def __init__(
-        self, coordinator: HyDASCoordinator, entry: ConfigEntry, station_id: str
-    ) -> None:
+    def __init__(self, coordinator: HyDASCoordinator, entry: ConfigEntry, station_id: str) -> None:
         super().__init__(coordinator, entry, station_id)
         self._attr_unique_id = f"{entry.entry_id}_{station_id}_station_status_expected_end"

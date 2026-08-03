@@ -226,6 +226,24 @@ entwickelt, betrieben oder offiziell unterstützt.
 Fehler und Funktionswünsche können über die
 [GitHub Issues](https://github.com/tcbrmr/ha-hydas/issues) gemeldet werden.
 
+## Entwicklung und Tests
+
+Die vollständige Release-Prüfung benötigt Python 3.14. Lokal kann sie in einer
+virtuellen Umgebung ausgeführt werden:
+
+```bash
+python3.14 -m venv .venv
+.venv/bin/python -m pip install -r requirements_test.txt
+.venv/bin/python -m ruff check .
+.venv/bin/python -m ruff format --check .
+.venv/bin/python -m pytest
+```
+
+GitHub Actions führt diese Prüfungen sowie HACS Validation und `hassfest` bei
+Pushes, Pull Requests und Release-Tags automatisch aus. Bei Tags prüft die
+Testsuite zusätzlich, ob der Tag (zum Beispiel `v0.2.0`) mit der Version in
+`manifest.json` übereinstimmt.
+
 ## Lizenz
 
 Der Quellcode dieser Integration steht unter der [MIT-Lizenz](LICENSE). Für die

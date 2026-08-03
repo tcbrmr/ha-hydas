@@ -137,16 +137,12 @@ class HyDASClient:
         """Return the most recent value reported by a parameter."""
         station = quote(station_id, safe="")
         parameter = quote(parameter_id, safe="")
-        values = await self._get_data(
-            f"stations/{station}/parameters/{parameter}/values"
-        )
+        values = await self._get_data(f"stations/{station}/parameters/{parameter}/values")
         valid = [item for item in values if isinstance(item.get("timestamp"), str)]
         if not valid:
             return None, None
         try:
-            latest = max(
-                valid, key=lambda item: datetime.fromisoformat(item["timestamp"])
-            )
+            latest = max(valid, key=lambda item: datetime.fromisoformat(item["timestamp"]))
         except ValueError as err:
             raise HyDASResponseError("A measurement timestamp is not ISO-8601") from err
         value = latest.get("value")
@@ -163,9 +159,7 @@ class HyDASClient:
             found = {str(station.get("id")) for station in stations}
             missing = set(station_ids) - found
             if missing:
-                raise HyDASResponseError(
-                    f"Unknown station IDs: {', '.join(sorted(missing))}"
-                )
+                raise HyDASResponseError(f"Unknown station IDs: {', '.join(sorted(missing))}")
 
     async def async_get_measurements(
         self, station_ids: list[str] | None = None
@@ -182,9 +176,7 @@ class HyDASClient:
             async def load_parameter(parameter: dict[str, Any]) -> Measurement:
                 if not isinstance(parameter.get("id"), str):
                     raise HyDASResponseError("A parameter is missing its string ID")
-                value, timestamp = await self.async_get_latest_value(
-                    station_id, parameter["id"]
-                )
+                value, timestamp = await self.async_get_latest_value(station_id, parameter["id"])
                 return Measurement(station, parameter, value, timestamp)
 
             return await asyncio.gather(*(load_parameter(item) for item in parameters))

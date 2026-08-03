@@ -6,7 +6,6 @@ import hashlib
 from typing import Any
 
 import voluptuous as vol
-
 from homeassistant import config_entries
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
@@ -68,13 +67,7 @@ def _stations_schema(
     key = vol.Required(CONF_STATION_IDS)
     if selected:
         key = vol.Required(CONF_STATION_IDS, default=selected)
-    return vol.Schema(
-        {
-            key: SelectSelector(
-                SelectSelectorConfig(options=options, multiple=True)
-            )
-        }
-    )
+    return vol.Schema({key: SelectSelector(SelectSelectorConfig(options=options, multiple=True))})
 
 
 async def _load_stations(
@@ -108,9 +101,7 @@ class HyDASConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors: dict[str, str] = {}
         if user_input is not None:
             try:
-                self._pending_data, self._stations = await _load_stations(
-                    self.hass, user_input
-                )
+                self._pending_data, self._stations = await _load_stations(self.hass, user_input)
             except HyDASConnectionError:
                 errors["base"] = "cannot_connect"
             except (HyDASResponseError, ValueError):
@@ -135,16 +126,10 @@ class HyDASConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 errors[CONF_STATION_IDS] = "invalid_station"
             else:
                 data = {**self._pending_data, CONF_STATION_IDS: selected}
-                fingerprint = (
-                    f"{data[CONF_BASE_URL]}|{','.join(sorted(selected))}"
-                )
-                await self.async_set_unique_id(
-                    hashlib.sha256(fingerprint.encode()).hexdigest()
-                )
+                fingerprint = f"{data[CONF_BASE_URL]}|{','.join(sorted(selected))}"
+                await self.async_set_unique_id(hashlib.sha256(fingerprint.encode()).hexdigest())
                 self._abort_if_unique_id_configured()
-                return self.async_create_entry(
-                    title=data[CONF_BASE_URL], data=data
-                )
+                return self.async_create_entry(title=data[CONF_BASE_URL], data=data)
         return self.async_show_form(
             step_id="stations",
             data_schema=_stations_schema(self._stations),
@@ -170,9 +155,7 @@ class HyDASOptionsFlow(config_entries.OptionsFlow):
         current = {**self.config_entry.data, **self.config_entry.options}
         if user_input is not None:
             try:
-                self._pending_data, self._stations = await _load_stations(
-                    self.hass, user_input
-                )
+                self._pending_data, self._stations = await _load_stations(self.hass, user_input)
             except HyDASConnectionError:
                 errors["base"] = "cannot_connect"
             except (HyDASResponseError, ValueError):
