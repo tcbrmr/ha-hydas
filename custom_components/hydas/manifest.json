@@ -1,0 +1,12 @@
+{
+  "domain": "hydas",
+  "name": "HyDAS API",
+  "codeowners": ["@tcbrmr"],
+  "config_flow": true,
+  "documentation": "https://github.com/tcbrmr/ha-hydas",
+  "integration_type": "hub",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/tcbrmr/ha-hydas/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}

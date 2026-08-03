@@ -1,0 +1,104 @@
+{
+  "title": "HyDAS API",
+  "config": {
+    "step": {
+      "user": {
+        "title": "HyDAS API verbinden",
+        "description": "Gib die Basis-URL einer API ein, die den HydroDaten-API-Standard implementiert. Im nächsten Schritt kannst du die angebotenen Stationen durchsuchen und auswählen.",
+        "data": {
+          "base_url": "Basis-URL",
+          "scan_interval": "Aktualisierungsintervall (Sekunden)"
+        },
+        "data_description": {
+          "base_url": "Zum Beispiel https://pegelonline.wsv.de/api/v1",
+          "scan_interval": "Mindestens 60 Sekunden"
+        }
+      },
+      "stations": {
+        "title": "Stationen auswählen",
+        "description": "Suche nach Gewässer, Stationsname, Bundesland oder Stationsnummer. Die Treffer sind nach Gewässer und Station sortiert.",
+        "data": {
+          "station_ids": "Stationen"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Die API ist nicht erreichbar.",
+      "invalid_response": "Die API-Antwort ist ungültig oder enthält keine Stationen.",
+      "station_required": "Wähle mindestens eine Station aus.",
+      "invalid_station": "Eine ausgewählte Station wird von der API nicht mehr angeboten."
+    },
+    "abort": {
+      "already_configured": "Diese API mit derselben Stationsauswahl ist bereits eingerichtet."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "HyDAS API konfigurieren",
+        "description": "Prüfe die Verbindungseinstellungen. Im nächsten Schritt kannst du die Stationsauswahl ändern.",
+        "data": {
+          "base_url": "Basis-URL",
+          "scan_interval": "Aktualisierungsintervall (Sekunden)"
+        }
+      },
+      "stations": {
+        "title": "Stationen auswählen",
+        "description": "Suche nach Gewässer, Stationsname, Bundesland oder Stationsnummer. Die Treffer sind nach Gewässer und Station sortiert.",
+        "data": {
+          "station_ids": "Stationen"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Die API ist nicht erreichbar.",
+      "invalid_response": "Die API-Antwort ist ungültig oder enthält keine Stationen.",
+      "station_required": "Wähle mindestens eine Station aus.",
+      "invalid_station": "Eine ausgewählte Station wird von der API nicht mehr angeboten."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "health_status": {
+        "name": "Status",
+        "state": {
+          "healthy": "Fehlerfrei",
+          "degraded": "Eingeschränkt",
+          "unhealthy": "Nicht verfügbar"
+        }
+      },
+      "health_uptime": {
+        "name": "Uptime"
+      },
+      "health_timestamp": {
+        "name": "Letzter Health-Check"
+      },
+      "station_status": {
+        "name": "Stationsstatus",
+        "state": {
+          "operational": "In Betrieb",
+          "impaired": "Beeinträchtigt",
+          "decommissioned": "Außer Betrieb genommen",
+          "unavailable": "Nicht verfügbar",
+          "degraded": "Eingeschränkt",
+          "sensor-malfunction": "Sensorstörung",
+          "communication-failure": "Kommunikationsstörung",
+          "power-outage": "Stromausfall",
+          "maintenance": "Wartung",
+          "construction": "Bauarbeiten",
+          "calibration": "Kalibrierung",
+          "data-quality": "Datenqualitätsproblem",
+          "environmental": "Umwelteinfluss",
+          "offline": "Offline",
+          "other": "Sonstiger Zustand"
+        }
+      },
+      "station_status_since": {
+        "name": "Status seit"
+      },
+      "station_status_expected_end": {
+        "name": "Voraussichtliches Statusende"
+      }
+    }
+  }
+}

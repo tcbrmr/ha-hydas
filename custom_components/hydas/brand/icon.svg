@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">HyDAS API</title>
+  <desc id="desc">A blue water drop containing white waves and a green measurement line</desc>
+  <defs>
+    <linearGradient id="water" x1="104" y1="56" x2="408" y2="456" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#18A6D8"/>
+      <stop offset="1" stop-color="#0866A8"/>
+    </linearGradient>
+  </defs>
+  <path
+    fill="url(#water)"
+    d="M256 28C224 81 116 203 116 310c0 78 63 142 140 142s140-64 140-142C396 203 288 81 256 28Z"
+  />
+  <path
+    fill="none"
+    stroke="#FFFFFF"
+    stroke-linecap="round"
+    stroke-width="28"
+    d="M153 315c34-29 68-29 102 0s68 29 103 0"
+  />
+  <path
+    fill="none"
+    stroke="#FFFFFF"
+    stroke-linecap="round"
+    stroke-width="28"
+    d="M170 366c29-23 58-23 87 0s58 23 87 0"
+  />
+  <path
+    fill="none"
+    stroke="#8BC34A"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="24"
+    d="m166 254 54-47 51 30 74-77"
+  />
+  <g fill="#8BC34A" stroke="#FFFFFF" stroke-width="10">
+    <circle cx="166" cy="254" r="16"/>
+    <circle cx="220" cy="207" r="16"/>
+    <circle cx="271" cy="237" r="16"/>
+    <circle cx="345" cy="160" r="16"/>
+  </g>
+</svg>

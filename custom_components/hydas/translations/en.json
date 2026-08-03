@@ -1,0 +1,37 @@
+{
+  "title": "HyDAS API",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect HyDAS API",
+        "description": "Enter the base URL of an API implementing the Hydro Data API standard. You can search and select its stations in the next step.",
+        "data": {"base_url": "Base URL", "scan_interval": "Update interval (seconds)"},
+        "data_description": {"base_url": "For example https://pegelonline.wsv.de/api/v1", "scan_interval": "At least 60 seconds"}
+      },
+      "stations": {
+        "title": "Select stations",
+        "description": "Search by water body, station name, state, or station number. Results are sorted by water body and station.",
+        "data": {"station_ids": "Stations"}
+      }
+    },
+    "error": {"cannot_connect": "The API cannot be reached.", "invalid_response": "The API response is invalid or contains no stations.", "station_required": "Select at least one station.", "invalid_station": "A selected station is no longer offered by the API."},
+    "abort": {"already_configured": "This API with the same station selection is already configured."}
+  },
+  "options": {
+    "step": {
+      "init": {"title": "Configure HyDAS API", "description": "Check the connection settings. You can change the station selection in the next step.", "data": {"base_url": "Base URL", "scan_interval": "Update interval (seconds)"}},
+      "stations": {"title": "Select stations", "description": "Search by water body, station name, state, or station number. Results are sorted by water body and station.", "data": {"station_ids": "Stations"}}
+    },
+    "error": {"cannot_connect": "The API cannot be reached.", "invalid_response": "The API response is invalid or contains no stations.", "station_required": "Select at least one station.", "invalid_station": "A selected station is no longer offered by the API."}
+  },
+  "entity": {
+    "sensor": {
+      "health_status": {"name": "Status", "state": {"healthy": "Healthy", "degraded": "Degraded", "unhealthy": "Unhealthy"}},
+      "health_uptime": {"name": "Uptime"},
+      "health_timestamp": {"name": "Last health check"},
+      "station_status": {"name": "Station status", "state": {"operational": "Operational", "impaired": "Impaired", "decommissioned": "Decommissioned", "unavailable": "Unavailable", "degraded": "Degraded", "sensor-malfunction": "Sensor malfunction", "communication-failure": "Communication failure", "power-outage": "Power outage", "maintenance": "Maintenance", "construction": "Construction", "calibration": "Calibration", "data-quality": "Data quality issue", "environmental": "Environmental impact", "offline": "Offline", "other": "Other"}},
+      "station_status_since": {"name": "Status since"},
+      "station_status_expected_end": {"name": "Expected status end"}
+    }
+  }
+}
