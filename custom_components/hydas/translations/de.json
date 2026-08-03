@@ -29,6 +29,8 @@
       "health_status": {"name": "Status", "state": {"healthy": "Fehlerfrei", "degraded": "Eingeschränkt", "unhealthy": "Nicht verfügbar"}},
       "health_uptime": {"name": "Uptime"},
       "health_timestamp": {"name": "Letzter Health-Check"},
+      "reference_elevation": {"name": "Pegelnullpunkt"},
+      "absolute_water_level": {"name": "Wasserstand absolut"},
       "station_status": {"name": "Stationsstatus", "state": {"operational": "In Betrieb", "impaired": "Beeinträchtigt", "decommissioned": "Außer Betrieb genommen", "unavailable": "Nicht verfügbar", "degraded": "Eingeschränkt", "sensor-malfunction": "Sensorstörung", "communication-failure": "Kommunikationsstörung", "power-outage": "Stromausfall", "maintenance": "Wartung", "construction": "Bauarbeiten", "calibration": "Kalibrierung", "data-quality": "Datenqualitätsproblem", "environmental": "Umwelteinfluss", "offline": "Offline", "other": "Sonstiger Zustand"}},
       "station_status_since": {"name": "Status seit"},
       "station_status_expected_end": {"name": "Voraussichtliches Statusende"}

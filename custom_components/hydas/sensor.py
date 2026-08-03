@@ -19,6 +19,54 @@ from .const import DOMAIN
 from .coordinator import HyDASCoordinator
 from .helpers import parameter_icon, station_display_name
 
+RELATIVE_WATER_LEVEL_PROPERTIES = {"water-level-rel"}
+
+
+def _is_number(value: Any) -> bool:
+    """Return whether a value is a usable numeric sensor value."""
+    return isinstance(value, (int, float)) and not isinstance(value, bool)
+
+
+def _relative_water_level_factor(parameter: dict[str, Any]) -> float | None:
+    """Return the factor for converting a relative water level to metres."""
+    unit = str(parameter.get("unitDisplay") or parameter.get("unit") or "").strip().casefold()
+    return {"mm": 0.001, "cm": 0.01, "m": 1.0}.get(unit)
+
+
+def _is_relative_water_level(measurement: Measurement) -> bool:
+    """Return whether a measurement represents a relative surface-water level."""
+    parameter = measurement.parameter
+    return (
+        parameter.get("observedProperty") in RELATIVE_WATER_LEVEL_PROPERTIES
+        or str(parameter.get("id", "")).casefold() == "w"
+    ) and _relative_water_level_factor(parameter) is not None
+
+
+def _reference_elevation(station: dict[str, Any]) -> tuple[float | int, str] | None:
+    """Return a valid station reference elevation and its original display unit."""
+    elevation = station.get("referenceElevation")
+    if not isinstance(elevation, dict) or not _is_number(elevation.get("value")):
+        return None
+    unit = str(elevation.get("unit") or "").strip().casefold()
+    unit_display = str(elevation.get("unitDisplay") or "").strip()
+    if unit != "m" and not unit_display.casefold().startswith("m"):
+        return None
+    return elevation["value"], unit_display or "m"
+
+
+def _absolute_water_level(measurement: Measurement) -> float | None:
+    """Calculate the water-surface elevation in the station reference system."""
+    elevation = _reference_elevation(measurement.station)
+    factor = _relative_water_level_factor(measurement.parameter)
+    if (
+        not _is_relative_water_level(measurement)
+        or elevation is None
+        or factor is None
+        or not _is_number(measurement.value)
+    ):
+        return None
+    return round(float(elevation[0]) + float(measurement.value) * factor, 6)
+
 
 async def async_setup_entry(
     hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
@@ -27,6 +75,7 @@ async def async_setup_entry(
     coordinator: HyDASCoordinator = hass.data[DOMAIN][entry.entry_id]
     known: set[tuple[str, str]] = set()
     status_stations_added: set[str] = set()
+    elevation_stations_added: set[str] = set()
     health_added = False
 
     @callback
@@ -37,6 +86,21 @@ async def async_setup_entry(
             HyDASSensor(coordinator, entry, key) for key in sorted(new_keys)
         ]
         known.update(new_keys)
+        relative_levels = {
+            str(measurement.station["id"]): measurement
+            for measurement in coordinator.data.values()
+            if _is_relative_water_level(measurement)
+            and _reference_elevation(measurement.station) is not None
+            and str(measurement.station["id"]) not in elevation_stations_added
+        }
+        for station_id, measurement in sorted(relative_levels.items()):
+            elevation_stations_added.add(station_id)
+            entities.extend(
+                (
+                    HyDASReferenceElevationSensor(coordinator, entry, measurement.key),
+                    HyDASAbsoluteWaterLevelSensor(coordinator, entry, measurement.key),
+                )
+            )
         stations_with_status = {
             str(measurement.station["id"])
             for measurement in coordinator.data.values()
@@ -138,6 +202,112 @@ class HyDASSensor(CoordinatorEntity[HyDASCoordinator], SensorEntity):
             "measurement_interval": parameter.get("interval"),
             "status": (parameter.get("status") or {}).get("condition"),
             "status_message": (parameter.get("status") or {}).get("message"),
+        }
+        if measurement.timestamp:
+            try:
+                attributes["measurement_timestamp"] = datetime.fromisoformat(measurement.timestamp)
+            except ValueError:
+                attributes["measurement_timestamp"] = measurement.timestamp
+        return {key: value for key, value in attributes.items() if value is not None}
+
+
+class HyDASDerivedWaterLevelSensorBase(CoordinatorEntity[HyDASCoordinator], SensorEntity):
+    """Base for station values derived from a relative water-level measurement."""
+
+    _attr_has_entity_name = True
+    _attr_icon = "mdi:waves"
+
+    def __init__(
+        self,
+        coordinator: HyDASCoordinator,
+        entry: ConfigEntry,
+        key: tuple[str, str],
+    ) -> None:
+        super().__init__(coordinator)
+        self._entry = entry
+        self._key = key
+
+    @property
+    def measurement(self) -> Measurement | None:
+        return self.coordinator.data.get(self._key)
+
+    @property
+    def native_unit_of_measurement(self) -> str | None:
+        measurement = self.measurement
+        elevation = _reference_elevation(measurement.station) if measurement else None
+        return elevation[1] if elevation else None
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        measurement = self.measurement
+        station: dict[str, Any] = measurement.station if measurement else {"id": self._key[0]}
+        return DeviceInfo(
+            identifiers={(DOMAIN, f"{self._entry.entry_id}_{self._key[0]}")},
+            name=station_display_name(station),
+            manufacturer=station.get("operator"),
+            configuration_url=station.get("url"),
+        )
+
+
+class HyDASReferenceElevationSensor(HyDASDerivedWaterLevelSensorBase):
+    """Pegelnullpunkt reported in the station's original reference system."""
+
+    _attr_translation_key = "reference_elevation"
+    _attr_icon = "mdi:elevation-rise"
+
+    def __init__(
+        self,
+        coordinator: HyDASCoordinator,
+        entry: ConfigEntry,
+        key: tuple[str, str],
+    ) -> None:
+        super().__init__(coordinator, entry, key)
+        self._attr_unique_id = f"{entry.entry_id}_{key[0]}_reference_elevation"
+
+    @property
+    def native_value(self) -> float | int | None:
+        measurement = self.measurement
+        elevation = _reference_elevation(measurement.station) if measurement else None
+        return elevation[0] if elevation else None
+
+    @property
+    def available(self) -> bool:
+        return super().available and self.native_value is not None
+
+
+class HyDASAbsoluteWaterLevelSensor(HyDASDerivedWaterLevelSensorBase):
+    """Absolute water-surface elevation derived from level and gauge datum."""
+
+    _attr_translation_key = "absolute_water_level"
+
+    def __init__(
+        self,
+        coordinator: HyDASCoordinator,
+        entry: ConfigEntry,
+        key: tuple[str, str],
+    ) -> None:
+        super().__init__(coordinator, entry, key)
+        self._attr_unique_id = f"{entry.entry_id}_{key[0]}_absolute_water_level"
+
+    @property
+    def native_value(self) -> float | None:
+        return _absolute_water_level(self.measurement) if self.measurement else None
+
+    @property
+    def available(self) -> bool:
+        return super().available and self.native_value is not None
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        measurement = self.measurement
+        if not measurement:
+            return {}
+        elevation = _reference_elevation(measurement.station)
+        attributes: dict[str, Any] = {
+            "relative_water_level": measurement.value,
+            "relative_unit": measurement.parameter.get("unitDisplay"),
+            "reference_elevation": elevation[0] if elevation else None,
+            "reference_unit": elevation[1] if elevation else None,
         }
         if measurement.timestamp:
             try:

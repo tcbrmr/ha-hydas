@@ -40,6 +40,8 @@ kommunalem **Umweltmonitoring**.
 - eine oder mehrere Stationen je API auswählen
 - Messparameter und Einheiten automatisch erkennen
 - pro Stationsparameter einen Home-Assistant-Sensor erzeugen
+- Pegelnullpunkt und daraus berechneten absoluten Wasserstand mit dem von der
+  API gelieferten Höhenbezug (zum Beispiel NHN oder NN) anzeigen
 - neue Messparameter bei späteren Aktualisierungen dynamisch ergänzen
 - Aktualisierungsintervall ab 60 Sekunden konfigurieren
 - API-Verfügbarkeit über den optionalen `/health`-Endpunkt überwachen

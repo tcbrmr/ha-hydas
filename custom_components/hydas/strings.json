@@ -73,6 +73,12 @@
       "health_timestamp": {
         "name": "Letzter Health-Check"
       },
+      "reference_elevation": {
+        "name": "Pegelnullpunkt"
+      },
+      "absolute_water_level": {
+        "name": "Wasserstand absolut"
+      },
       "station_status": {
         "name": "Stationsstatus",
         "state": {
