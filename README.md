@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="custom_components/hydas/brand/icon.png" alt="HyDAS API" width="160">
+  <img src="https://raw.githubusercontent.com/tcbrmr/ha-hydas/main/custom_components/hydas/brand/icon.png" alt="HyDAS API" width="160">
 </p>
 
 <h1 align="center">HyDAS API für Home Assistant</h1>
