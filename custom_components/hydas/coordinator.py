@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from datetime import timedelta
 import logging
+from datetime import timedelta
 
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
@@ -30,9 +30,7 @@ class HyDASCoordinator(DataUpdateCoordinator[dict[tuple[str, str], Measurement]]
 
     async def _async_update_data(self) -> dict[tuple[str, str], Measurement]:
         try:
-            measurements = await self.client.async_get_measurements(
-                self.station_ids or None
-            )
+            measurements = await self.client.async_get_measurements(self.station_ids or None)
         except HyDASError as err:
             raise UpdateFailed(f"Error communicating with HyDAS API: {err}") from err
 
