@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/tcbrmr/ha-hydas/releases"><img src="https://img.shields.io/github/v/release/tcbrmr/ha-hydas?display_name=tag&sort=semver" alt="GitHub Release"></a>
+  <a href="https://github.com/tcbrmr/ha-hydas/releases/latest"><img src="https://img.shields.io/github/v/release/tcbrmr/ha-hydas?display_name=tag&sort=semver&cacheSeconds=300&v=0.1.1" alt="GitHub Release"></a>
   <a href="https://github.com/tcbrmr/ha-hydas/blob/main/LICENSE"><img src="https://img.shields.io/github/license/tcbrmr/ha-hydas" alt="MIT License"></a>
   <img src="https://img.shields.io/badge/HACS-Custom-41BDF5" alt="HACS Custom Repository">
   <img src="https://img.shields.io/badge/Home%20Assistant-2024.6%2B-41BDF5" alt="Home Assistant 2024.6 oder neuer">
@@ -93,6 +93,23 @@ nicht Bestandteil des offiziellen HACS-Standardkatalogs.
 Bei Aktualisierungen bleiben bestehende Konfigurationseinträge und Entity-IDs
 erhalten. Neu hinzugekommene Sensorarten werden nach dem Neuladen der
 Integration automatisch ergänzt.
+
+### Ein neuer Release wird in HACS noch nicht angezeigt
+
+HACS aktualisiert die Metadaten benutzerdefinierter Repositories nicht in
+Echtzeit. Um einen gerade veröffentlichten Release sofort abzurufen:
+
+1. In HACS **HyDAS API** öffnen.
+2. Das Drei-Punkte-Menü des Repository-Eintrags öffnen.
+3. **Informationen aktualisieren** auswählen.
+4. Den Repository-Eintrag erneut öffnen und **Erneut herunterladen** wählen.
+5. Im Download-Dialog die neueste Version auswählen und anschließend Home
+   Assistant neu starten.
+
+Alternativ liest HACS die Daten eines benutzerdefinierten Repositorys beim
+nächsten Home-Assistant-Start erneut über die GitHub-API ein. Ein Klick auf
+**Nach Updates suchen** in Home Assistant aktualisiert nicht zwingend sofort die
+zwischengespeicherten HACS-Repository-Metadaten.
 
 ### Manuelle Installation
 
