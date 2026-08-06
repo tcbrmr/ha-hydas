@@ -17,17 +17,9 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .api import Measurement
 from .const import DOMAIN
 from .coordinator import HyDASCoordinator
-from .flood import FloodAlert
 from .helpers import parameter_icon, station_display_name
 
 RELATIVE_WATER_LEVEL_PROPERTIES = {"water-level-rel"}
-FLOOD_CLASS_STATES = {
-    1: "all_clear",
-    2: "preliminary_warning",
-    4: "flood_warning",
-    5: "large_flood_warning",
-    6: "very_large_flood_warning",
-}
 
 
 def _is_number(value: Any) -> bool:
@@ -84,7 +76,6 @@ async def async_setup_entry(
     known: set[tuple[str, str]] = set()
     status_stations_added: set[str] = set()
     elevation_stations_added: set[str] = set()
-    flood_stations_added: set[str] = set()
     health_added = False
 
     @callback
@@ -110,10 +101,6 @@ async def async_setup_entry(
                     HyDASAbsoluteWaterLevelSensor(coordinator, entry, measurement.key),
                 )
             )
-        new_flood_stations = set(coordinator.flood_alerts) - flood_stations_added
-        for station_id in sorted(new_flood_stations):
-            flood_stations_added.add(station_id)
-            entities.append(HyDASFloodWarningSensor(coordinator, entry, station_id))
         stations_with_status = {
             str(measurement.station["id"])
             for measurement in coordinator.data.values()
@@ -328,98 +315,6 @@ class HyDASAbsoluteWaterLevelSensor(HyDASDerivedWaterLevelSensorBase):
             except ValueError:
                 attributes["measurement_timestamp"] = measurement.timestamp
         return {key: value for key, value in attributes.items() if value is not None}
-
-
-class HyDASFloodWarningSensor(CoordinatorEntity[HyDASCoordinator], SensorEntity):
-    """Official LHP flood warning whose geometry covers a HyDAS station."""
-
-    _attr_has_entity_name = True
-    _attr_translation_key = "flood_warning"
-    _attr_device_class = SensorDeviceClass.ENUM
-    _attr_options = ["no_warning", *FLOOD_CLASS_STATES.values()]
-
-    def __init__(self, coordinator: HyDASCoordinator, entry: ConfigEntry, station_id: str) -> None:
-        super().__init__(coordinator)
-        self._entry = entry
-        self._station_id = station_id
-        self._attr_unique_id = f"{entry.entry_id}_{station_id}_flood_warning"
-
-    @property
-    def flood_alerts(self) -> tuple[FloodAlert, ...]:
-        return self.coordinator.flood_alerts.get(self._station_id, ())
-
-    @property
-    def highest_alert(self) -> FloodAlert | None:
-        return max(self.flood_alerts, key=lambda alert: alert.lhp_class, default=None)
-
-    @property
-    def hydas_station(self) -> dict[str, Any] | None:
-        return next(
-            (
-                measurement.station
-                for measurement in self.coordinator.data.values()
-                if str(measurement.station.get("id")) == self._station_id
-            ),
-            None,
-        )
-
-    @property
-    def native_value(self) -> str | None:
-        alert = self.highest_alert
-        if alert:
-            return FLOOD_CLASS_STATES.get(alert.lhp_class)
-        return "no_warning" if self.coordinator.flood_available else None
-
-    @property
-    def available(self) -> bool:
-        return super().available and self.coordinator.flood_available
-
-    @property
-    def icon(self) -> str:
-        return "mdi:alert" if self.highest_alert else "mdi:check-circle-outline"
-
-    @property
-    def device_info(self) -> DeviceInfo:
-        station = self.hydas_station or {"id": self._station_id}
-        return DeviceInfo(
-            identifiers={(DOMAIN, f"{self._entry.entry_id}_{self._station_id}")},
-            name=station_display_name(station),
-            manufacturer=station.get("operator"),
-            configuration_url=station.get("url"),
-        )
-
-    @property
-    def extra_state_attributes(self) -> dict[str, Any]:
-        alert = self.highest_alert
-        data = self.coordinator.flood_alert_data
-        if not alert or not data:
-            return {}
-        return {
-            key: value
-            for key, value in {
-                "active_alerts": len(self.flood_alerts),
-                "lhp_class": alert.lhp_class,
-                "class_name": alert.class_name,
-                "area_description": alert.area_description,
-                "area_type": alert.area_type,
-                "headline": alert.headline,
-                "description": alert.description,
-                "instruction": alert.instruction,
-                "sender": alert.sender_name,
-                "sent": alert.sent,
-                "onset": alert.onset,
-                "expires": alert.expires,
-                "severity": alert.severity,
-                "certainty": alert.certainty,
-                "alert_id": alert.identifier or alert.id,
-                "alert_link": alert.link,
-                "data_updated": data.updated,
-                "source": "Länderübergreifendes Hochwasserportal (LHP)",
-                "source_url": data.source,
-                "licence": data.licence,
-            }.items()
-            if value is not None
-        }
 
 
 class HyDASHealthSensorBase(CoordinatorEntity[HyDASCoordinator], SensorEntity):

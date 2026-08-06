@@ -31,7 +31,6 @@
       "health_timestamp": {"name": "Last health check"},
       "reference_elevation": {"name": "Gauge datum"},
       "absolute_water_level": {"name": "Absolute water level"},
-      "flood_warning": {"name": "Official flood warning", "state": {"no_warning": "No warning", "all_clear": "All clear", "preliminary_warning": "Preliminary warning", "flood_warning": "Flood warning", "large_flood_warning": "Large flood", "very_large_flood_warning": "Very large flood"}},
       "station_status": {"name": "Station status", "state": {"operational": "Operational", "impaired": "Impaired", "decommissioned": "Decommissioned", "unavailable": "Unavailable", "degraded": "Degraded", "sensor-malfunction": "Sensor malfunction", "communication-failure": "Communication failure", "power-outage": "Power outage", "maintenance": "Maintenance", "construction": "Construction", "calibration": "Calibration", "data-quality": "Data quality issue", "environmental": "Environmental impact", "offline": "Offline", "other": "Other"}},
       "station_status_since": {"name": "Status since"},
       "station_status_expected_end": {"name": "Expected status end"}

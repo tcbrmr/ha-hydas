@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/tcbrmr/ha-hydas/releases/latest"><img src="https://img.shields.io/github/v/release/tcbrmr/ha-hydas?display_name=tag&sort=semver&cacheSeconds=300&v=0.1.8" alt="GitHub Release"></a>
+  <a href="https://github.com/tcbrmr/ha-hydas/releases/latest"><img src="https://img.shields.io/github/v/release/tcbrmr/ha-hydas?display_name=tag&sort=semver&cacheSeconds=300&v=0.1.9" alt="GitHub Release"></a>
   <a href="https://github.com/tcbrmr/ha-hydas/blob/main/LICENSE"><img src="https://img.shields.io/github/license/tcbrmr/ha-hydas" alt="MIT License"></a>
   <img src="https://img.shields.io/badge/HACS-Custom-41BDF5" alt="HACS Custom Repository">
   <img src="https://img.shields.io/badge/Home%20Assistant-2024.6%2B-41BDF5" alt="Home Assistant 2024.6 oder neuer">
@@ -46,8 +46,6 @@ kommunalem **Umweltmonitoring**.
 - Aktualisierungsintervall ab 60 Sekunden konfigurieren
 - API-Verfügbarkeit über den optionalen `/health`-Endpunkt überwachen
 - Stations- und Parameterstatus als Diagnoseinformationen bereitstellen
-- amtliche Hochwasserwarnungen des Länderübergreifenden Hochwasserportals
-  (LHP) räumlich den ausgewählten Messstellen zuordnen
 - typabhängige Gerätebezeichnungen und passende Messwertsymbole verwenden
 - deutsche und englische Benutzeroberfläche anzeigen
 
@@ -61,11 +59,7 @@ Je nach Datenanbieter können unter anderem folgende Messgrößen verfügbar sei
 - Windgeschwindigkeit
 
 Die tatsächlich erzeugten Sensoren richten sich immer nach den Parametern, die
-die ausgewählte Station über ihre API bereitstellt. Ein Warnsensor wird erzeugt,
-sobald die Koordinate einer Messstelle innerhalb eines amtlichen Warngebiets
-liegt. Flussabschnitte werden nur bei passendem Gewässernamen und geringem
-Abstand zur Warnlinie zugeordnet. Quelle und Datenstand werden gemäß CC BY 4.0
-als Sensorattribute ausgewiesen.
+die ausgewählte Station über ihre API bereitstellt.
 
 ## Mögliche Anwendungsfälle
 

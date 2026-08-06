@@ -79,17 +79,6 @@
       "absolute_water_level": {
         "name": "Wasserstand absolut"
       },
-      "flood_warning": {
-        "name": "Amtliche Hochwasserwarnung",
-        "state": {
-          "no_warning": "Keine Warnung",
-          "all_clear": "Entwarnung",
-          "preliminary_warning": "Vorwarnung",
-          "flood_warning": "Hochwasser",
-          "large_flood_warning": "Großes Hochwasser",
-          "very_large_flood_warning": "Sehr großes Hochwasser"
-        }
-      },
       "station_status": {
         "name": "Stationsstatus",
         "state": {

@@ -31,7 +31,6 @@
       "health_timestamp": {"name": "Letzter Health-Check"},
       "reference_elevation": {"name": "Pegelnullpunkt"},
       "absolute_water_level": {"name": "Wasserstand absolut"},
-      "flood_warning": {"name": "Amtliche Hochwasserwarnung", "state": {"no_warning": "Keine Warnung", "all_clear": "Entwarnung", "preliminary_warning": "Vorwarnung", "flood_warning": "Hochwasser", "large_flood_warning": "Großes Hochwasser", "very_large_flood_warning": "Sehr großes Hochwasser"}},
       "station_status": {"name": "Stationsstatus", "state": {"operational": "In Betrieb", "impaired": "Beeinträchtigt", "decommissioned": "Außer Betrieb genommen", "unavailable": "Nicht verfügbar", "degraded": "Eingeschränkt", "sensor-malfunction": "Sensorstörung", "communication-failure": "Kommunikationsstörung", "power-outage": "Stromausfall", "maintenance": "Wartung", "construction": "Bauarbeiten", "calibration": "Kalibrierung", "data-quality": "Datenqualitätsproblem", "environmental": "Umwelteinfluss", "offline": "Offline", "other": "Sonstiger Zustand"}},
       "station_status_since": {"name": "Status seit"},
       "station_status_expected_end": {"name": "Voraussichtliches Statusende"}
